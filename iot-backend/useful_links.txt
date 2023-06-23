@@ -1,0 +1,14 @@
+INFORMAZIONI SU THINGY 52
+https://www.nordicsemi.com/Products/Development-hardware/Nordic-Thingy-52
+https://developer.nordicsemi.com/thingy/52/
+
+PRELEVARE DATI DA THINGY 52
+https://github.com/NordicPlayground/Nordic-Thingy52-Nodejs
+
+INSTALLARE MQTT BROKER MOSQUITTO 
+https://www.youtube.com/watch?v=8rpM34xoZ3o&t=496s
+
+SETUP MQTT IN NODEJS
+https://chat.openai.com/share/d283eba0-ae72-48ff-ad55-13564b50e6a4
+
+

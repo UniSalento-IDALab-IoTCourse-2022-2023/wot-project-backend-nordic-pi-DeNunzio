@@ -1,0 +1,29 @@
+JSON DI ESEMPIO PER IMPOSTARE I PARAMETRI DA RISPETTARE
+
+Nel seguente json sono i valori sono normali
+
+{
+  "minCO2": 400,
+  "maxCO2": 1000,
+  "minTemp": 20,
+  "maxTemp": 30,
+  "minPress": 900,
+  "maxPress": 1100,
+  "minHum": 40,
+  "maxHum": 80,
+  "hasToBeDark": 2
+}
+
+Nel seguente json i valori sono tutti anomali cosi da testare tutti i campi di mqtt
+
+{
+  "minCO2": 1,
+  "maxCO2": 2,
+  "minTemp": 1,
+  "maxTemp": 2,
+  "minPress": 1,
+  "maxPress": 2,
+  "minHum": 1,
+  "maxHum": 2,
+  "hasToBeDark": 0
+}
