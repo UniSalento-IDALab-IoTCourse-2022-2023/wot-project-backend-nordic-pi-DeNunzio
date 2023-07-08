@@ -27,3 +27,8 @@ Nel seguente json i valori sono tutti anomali cosi da testare tutti i campi di m
   "maxHum": 2,
   "hasToBeDark": 0
 }
+
+
+COMANDO PER COPIARE I FILE SU RASPBERRY
+
+scp -r . francescodenu@192.168.1.22:/home/francescodenu/Desktop/iot_project
