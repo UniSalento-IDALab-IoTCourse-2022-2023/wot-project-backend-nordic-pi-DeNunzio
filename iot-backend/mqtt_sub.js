@@ -38,6 +38,12 @@ client.on('connect', (connack) => {
     }
   });
 
+  client.subscribe('horizontal', (error) => {
+    if (error) {
+      console.error('Error subscribing to topic:', error);
+    }
+  });
+
 });
 
 // Register the message and error event listeners outside the setInterval loop

@@ -11,12 +11,12 @@ socket.on('connect', () => {
   socket.emit('subscribe', 'pressure');
   socket.emit('subscribe', 'humidity');
   socket.emit('subscribe', 'co2');
-  socket.emit('subscribe', 'topic1');
+  socket.emit('subscribe', 'horizontal');
 
 });
 
 socket.on('message', (data) => {
-  console.log(`Received message on topic ${data.topic}: ${data.message}`);
+  console.log(`WARNING: Anomaly ${data.topic}: ${data.message}`);
 });
 
 socket.on('disconnect', () => {

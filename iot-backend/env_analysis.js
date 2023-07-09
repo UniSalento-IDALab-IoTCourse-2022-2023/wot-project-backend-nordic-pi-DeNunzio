@@ -1,4 +1,5 @@
 var Thingy = require('./index');
+
 /*
 var mqtt = require('mqtt');
 var client = mqtt.connect('mqtt://localhost');
@@ -14,6 +15,9 @@ const maxPress = parseInt(process.argv[7]);
 const minHum = parseInt(process.argv[8]);
 const maxHum = parseInt(process.argv[9]);
 const hasToBeDark = parseInt(process.argv[10]);
+const hasToBeHorizontal = parseInt(process.argv[11])
+
+const horizontal_threshold = 0.1;
 const light_threshold = 300;
 
 // Variabili temporanee con i valori d'ambiente
@@ -22,11 +26,12 @@ var tempTemp;
 var tempPress;
 var tempHum;
 var tempClear; // valore che indica la luce
+var quaternionW; // questo valore è compreso tra 0 e 0.1 se l'oggetto è orizzontale
 
 // Segue una funzione chiamata ogni TOT secondi che controlla se i valori d'ambiente sono in linea con quelli richiesti
 // Se i valori sono anomali, il codice è pronto per:
 // 1) Inviare in mqtt informazione sul valore anomalo
-// 2) Inviare tramite Web Socket informazione su valore anonimo
+// 2) Inviare tramite Web Socket informazione su valore anomalo
 
 function checkEnv() {
 
@@ -94,7 +99,6 @@ function checkEnv() {
         }
 
 
-
         if (hasToBeDark === 1 && tempClear > light_threshold){
             console.log("WARNING: Too much light " + tempClear )
             socket.emit('publish', { topic: 'light', message: tempClear.toString() }); // Invia tramite Web Socket il valore anomalo
@@ -119,6 +123,21 @@ function checkEnv() {
             console.log("Light " + tempClear)
         }
 
+
+        if ( hasToBeHorizontal === 1 && Math.abs(quaternionW) >= horizontal_threshold){
+            console.log("Warning: object is not horizontal")
+            socket.emit('publish', { topic: 'horizontal', message: "0".toString() }); // Invia tramite Web Socket il valore anomalo
+            /*
+                client.publish('horizontal', "0".toString(), function(error) { // Invia tramite MQTT il valore anomalo
+                    if (error) {
+                        console.error('Error publishing horizontal value:', error);
+                    }
+                });
+            */
+        } else {
+            console.log("Object orientation is ok")
+        }
+
 }
 
 
@@ -135,15 +154,16 @@ function onHumidityData(humidity) {
 }
 function onGasData(gas) {
     tempCO2 = gas.eco2;
-    //console.log('Gas sensor: eCO2 ' + gas.eco2 + ' - TVOC ' + gas.tvoc );
-    //NOTA CHE QUI PUOI MISURARE ANCHE TVOC
-
+    //console.log('Gas sensor: eCO2 ' + gas.eco2 + ' - TVOC ' + gas.tvoc ); //NOTA CHE QUI PUOI MISURARE ANCHE TVOC
 }
 function onColorData(color) {
     //console.log('Color sensor: r ' + color.red + ' g ' + color.green + ' b ' + color.blue + ' c ' + color.clear );
     tempClear = color.clear;
 }
-
+function onQuaternionData(quaternion) {
+    //console.log('Quaternion data: w: %d, x: %d, y: %d, z: %d', quaternion.w, quaternion.x, quaternion.y, quaternion.z);
+    quaternionW = quaternion.w;
+}
 
 // Segue funzione che accoppia il raspberry con il thingy
 // Successivamente associa le funzioni di callback agli eventi relativi all'esistenza di un nuovo dato
@@ -164,6 +184,7 @@ function onDiscover(thingy) {
         thingy.on('humidityNotif', onHumidityData);
         thingy.on('gasNotif', onGasData);
         thingy.on('colorNotif', onColorData);
+        thingy.on('quaternionNotif', onQuaternionData);
 
         thingy.temperature_interval_set(1000, function(error) {
             if (error) {
@@ -206,6 +227,9 @@ function onDiscover(thingy) {
         thingy.gas_enable(function(error) {
             console.log('Gas sensor started! ' + ((error) ? error : ''));
         });
+        thingy.quaternion_enable(function (error) {
+            console.log('Quaternion sensor started! ' + ((error) ? error : ''));
+        });
 
         setInterval(checkEnv, 5000);
     });
@@ -215,6 +239,8 @@ function onDiscover(thingy) {
 
 const socketIOClient = require('socket.io-client');
 const socket = socketIOClient('http://127.0.0.1:6000');
+
+console.log("Waiting for Web Socket connection...")
 
 socket.on('connect', () => { // Dopo che ci si collega al server Web Socket, si cerca il dispositivo thingy
     console.log('Connected to Web Socket server...');

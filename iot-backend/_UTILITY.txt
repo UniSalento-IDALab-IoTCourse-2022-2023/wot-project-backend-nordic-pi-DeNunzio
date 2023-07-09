@@ -11,7 +11,8 @@ Nel seguente json sono i valori sono normali
   "maxPress": 1100,
   "minHum": 40,
   "maxHum": 80,
-  "hasToBeDark": 2
+  "hasToBeDark": 2,
+  "hasToBeHorizontal": 1
 }
 
 Nel seguente json i valori sono tutti anomali cosi da testare tutti i campi di mqtt
@@ -25,7 +26,8 @@ Nel seguente json i valori sono tutti anomali cosi da testare tutti i campi di m
   "maxPress": 2,
   "minHum": 1,
   "maxHum": 2,
-  "hasToBeDark": 0
+  "hasToBeDark": 0,
+  "hasToBeHorizontal": 1
 }
 
 
