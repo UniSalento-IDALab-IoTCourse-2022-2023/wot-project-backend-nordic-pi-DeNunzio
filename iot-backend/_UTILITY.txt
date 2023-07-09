@@ -1,0 +1,48 @@
+JSON DI ESEMPIO PER IMPOSTARE I PARAMETRI DA RISPETTARE
+
+Nel seguente json sono i valori sono normali
+
+{
+  "minCO2": 400,
+  "maxCO2": 1000,
+  "minTemp": 20,
+  "maxTemp": 30,
+  "minPress": 900,
+  "maxPress": 1100,
+  "minHum": 40,
+  "maxHum": 80,
+  "hasToBeDark": 2
+}
+
+Nel seguente json i valori sono tutti anomali cosi da testare tutti i campi di mqtt
+
+{
+  "minCO2": 1,
+  "maxCO2": 2,
+  "minTemp": 1,
+  "maxTemp": 2,
+  "minPress": 1,
+  "maxPress": 2,
+  "minHum": 1,
+  "maxHum": 2,
+  "hasToBeDark": 0
+}
+
+
+COMANDO PER COPIARE I FILE SU RASPBERRY
+scp -r . francescodenu@192.168.1.22:/home/francescodenu/Desktop/iot_project
+
+--------------------------------------------------
+
+THINGY VUOLE NODE v8.9.0
+WEBSOCKET VUOLE NODE v10.2.0
+
+nvm use <version> // utilizzi una versione specifica nella attuale sessione di terminale
+oppure
+sudo n <version>
+
+ATTENZIONE ATTENZIONE ATTENZIONE ATTENZIONE
+1) Su un terminale con node versione 8.9.0 esegui npm install e sudo node app.js
+2) Su un terminale con node versione 10.2.0 esegui il server node ws_server.js
+
+--------------------------------------------------

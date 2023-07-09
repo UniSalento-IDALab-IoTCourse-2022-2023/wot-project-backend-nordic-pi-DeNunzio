@@ -13,12 +13,12 @@ app.locals.minHum = 20;
 app.locals.maxHum = 80;
 app.locals.hasToBeDark = 2; // indica che non importa se è scuro o meno
 
-let analysisProcess; // Variable to hold the analysis process reference
-let analysisRunning = false; // Flag to track if the temperature analysis is running
+let analysisProcess; // Variabile che rappresenta il processo child che effettua analisi dell'ambiente
+let analysisRunning = false; // Flag che traccia se l'analisi dell'ambiente è in corso
 
 app.use(express.json());
 
-// Tramite questo endpoint vengono settati i valori che devono essere rispettati
+// Tramite questo endpoint vengono settati i valori da rispettare durante l'analisi dell'ambiente, se si esce da questi range bisogna avvisare!
 app.post('/set_params', (req, res) => {
     const {
         minCO2,
@@ -57,7 +57,7 @@ app.post('/set_params', (req, res) => {
 
 
 // Tramite questo endpoint viene creato un child che si occuperà dell'analisi dell'ambiente.
-// Se il child esce con exit code di 1 (significa che ha falito la connessione bluetooth con il raspberry), allora viene generato un altro child.
+// Se il child esce con exit code di 1 (significa che ha falito l'accoppiamento bluetooth con il raspberry), allora viene generato un altro child.
 app.get('/start_analysis', (req, res) => {
     if (analysisRunning) {
         res.status(400).json({ message: 'The environment analysis is already running.' });

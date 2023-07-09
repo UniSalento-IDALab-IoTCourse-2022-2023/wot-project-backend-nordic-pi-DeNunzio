@@ -1,8 +1,10 @@
 INFORMAZIONI SU THINGY 52
 https://www.nordicsemi.com/Products/Development-hardware/Nordic-Thingy-52
+
+WEB API PER THINGY
 https://developer.nordicsemi.com/thingy/52/
 
-PRELEVARE DATI DA THINGY 52
+BLUETOOTH API PER THINGY
 https://github.com/NordicPlayground/Nordic-Thingy52-Nodejs
 
 INSTALLARE MQTT BROKER MOSQUITTO 
@@ -11,4 +13,9 @@ https://www.youtube.com/watch?v=8rpM34xoZ3o&t=496s
 SETUP MQTT IN NODEJS
 https://chat.openai.com/share/d283eba0-ae72-48ff-ad55-13564b50e6a4
 
+SET UP FIXED IP ON RASPBERRY
+https://www.tomshardware.com/how-to/static-ip-raspberry-pi
 
+GESTIRE VERSIONI DI NODE JS
+https://heynode.com/tutorial/install-nodejs-locally-nvm/
+https://allurcode.com/install-any-version-of-nodejs-and-npm-on-raspberry-pi/

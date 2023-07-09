@@ -1,6 +1,8 @@
 var Thingy = require('./index');
+/*
 var mqtt = require('mqtt');
 var client = mqtt.connect('mqtt://localhost');
+*/
 
 // Vengono prelevati i valori d'ambiente ideali dagli argomenti
 const minCO2 = parseInt(process.argv[2]);
@@ -22,18 +24,24 @@ var tempHum;
 var tempClear; // valore che indica la luce
 
 // Segue una funzione chiamata ogni TOT secondi che controlla se i valori d'ambiente sono in linea con quelli richiesti
-// Se i valori sono anomali, invia in MQTT l'informazione sullo specifico topic
+// Se i valori sono anomali, il codice è pronto per:
+// 1) Inviare in mqtt informazione sul valore anomalo
+// 2) Inviare tramite Web Socket informazione su valore anonimo
+
 function checkEnv() {
 
-        console.log("--------------------------------------------------")
+    console.log("--------------------------------------------------")
 
         if (tempTemp > maxTemp || tempTemp < minTemp){
             console.log('WARNING, Temperature sensor: ' + tempTemp);
-            client.publish('temperature', tempTemp.toString(), function(error) {
+            socket.emit('publish', { topic: 'temperature', message: tempTemp.toString() }); // Invia tramite Web Socket il valore anomalo
+            /*
+            client.publish('temperature', tempTemp.toString(), function(error) { // Invia tramite MQTT il valore anomalo
                 if (error) {
                     console.error('Error publishing temperature value:', error);
                 }
             });
+            */
         } else{
             console.log('Temperature sensor: ' + tempTemp);
         }
@@ -41,11 +49,15 @@ function checkEnv() {
 
         if (tempPress > maxPress || tempPress < minPress){
             console.log('WARNING, Pressure sensor: ' + tempPress);
-            client.publish('pressure', tempPress.toString(), function(error) {
+            socket.emit('publish', { topic: 'pressure', message: tempPress.toString() }); // Invia tramite Web Socket il valore anomalo
+            /*
+            client.publish('pressure', tempPress.toString(), function(error) { // Invia tramite MQTT il valore anomalo
                 if (error) {
                     console.error('Error publishing pressure value:', error);
                 }
             });
+            */
+
         } else {
             console.log('Pressure sensor: ' + tempPress);
         }
@@ -53,11 +65,15 @@ function checkEnv() {
 
         if (tempHum > maxHum || tempHum < minHum){
             console.log('WARNING, Humidity sensor: ' + tempHum);
-            client.publish('humidity', tempHum.toString(), function(error) {
+            socket.emit('publish', { topic: 'humidity', message: tempHum.toString() }); // Invia tramite Web Socket il valore anomalo
+            /*
+            client.publish('humidity', tempHum.toString(), function(error) { // Invia tramite MQTT il valore anomalo
                 if (error) {
                     console.error('Error publishing humidity value:', error);
                 }
             });
+            */
+
         } else{
             console.log('Humidity sensor: ' + tempHum);
         }
@@ -65,11 +81,14 @@ function checkEnv() {
 
         if (tempCO2 > maxC02 || tempCO2 < minCO2){
             console.log('WARNING, CO2 sensor: ' + tempCO2);
-            client.publish('co2', tempCO2.toString(), function(error) {
+            socket.emit('publish', { topic: 'co2', message: tempCO2.toString() }); // Invia tramite Web Socket il valore anomalo
+            /*
+            client.publish('co2', tempCO2.toString(), function(error) { // Invia tramite MQTT il valore anomalo
                 if (error) {
                     console.error('Error publishing co2 value:', error);
                 }
             });
+            */
         } else{
             console.log('CO2 sensor: ' + tempCO2);
         }
@@ -78,18 +97,24 @@ function checkEnv() {
 
         if (hasToBeDark === 1 && tempClear > light_threshold){
             console.log("WARNING: Too much light " + tempClear )
-            client.publish('light', tempClear.toString(), function(error) {
+            socket.emit('publish', { topic: 'light', message: tempClear.toString() }); // Invia tramite Web Socket il valore anomalo
+            /*
+            client.publish('light', tempClear.toString(), function(error) { // Invia tramite MQTT il valore anomalo
                 if (error) {
                     console.error('Error publishing light value:', error);
                 }
             });
+            */
         } else if (hasToBeDark === 0 && tempClear < light_threshold){
             console.log("WARNING: Too much dark " + tempClear)
-            client.publish('light', tempClear.toString(), function(error) {
+            socket.emit('publish', { topic: 'light', message: tempClear.toString() }); // Invia tramite Web Socket il valore anomalo
+            /*
+            client.publish('light', tempClear.toString(), function(error) { // Invia tramite MQTT il valore anomalo
                 if (error) {
                     console.error('Error publishing light value:', error);
                 }
             });
+            */
         } else {
             console.log("Light " + tempClear)
         }
@@ -98,69 +123,21 @@ function checkEnv() {
 
 
 // Seguono le funzioni di callback chiamate ogni volta che c'è un nuovo valore
-// Inizialmente l'analisi dei dati era qui, ma volendo farla una volta ogni TOT secondi è stata spostata nella funzione checkEnv()
+// Inizialmente l'analisi dei dati era qui, ma volendo farla una volta ogni TOT secondi è stata spostata nella funzione checkEnv(), perche queste funzioni sono chiamate ogni volta che c'è una misura.
 function onTemperatureData(temperature) {
     tempTemp = temperature;
-/*
-    if (temperature > maxTemp || temperature < minTemp){
-        console.log('WARNING, Temperature sensor: ' + temperature);
-        client.publish('temperature', temperature.toString(), function(error) {
-        if (error) {
-            console.error('Error publishing temperature value:', error);
-        }
-    });
-    } else{
-        console.log('Temperature sensor: ' + temperature);
-    }
-*/
 }
 function onPressureData(pressure) {
     tempPress = pressure;
-/*
-    if (pressure > maxPress || pressure < minPress){
-        console.log('WARNING, Pressure sensor: ' + pressure);
-        client.publish('pressure', pressure.toString(), function(error) {
-            if (error) {
-                console.error('Error publishing pressure value:', error);
-            }
-        });
-    } else{
-        console.log('Pressure sensor: ' + pressure);
-    }
-*/
 }
 function onHumidityData(humidity) {
     tempHum = humidity;
-/*
-    if (humidity > maxHum || humidity < minHum){
-        console.log('WARNING, Humidity sensor: ' + humidity);
-        client.publish('humidity', humidity.toString(), function(error) {
-            if (error) {
-                console.error('Error publishing humidity value:', error);
-            }
-        });
-    } else{
-        console.log('Humidity sensor: ' + humidity);
-    }
-*/
 }
 function onGasData(gas) {
     tempCO2 = gas.eco2;
-
     //console.log('Gas sensor: eCO2 ' + gas.eco2 + ' - TVOC ' + gas.tvoc );
     //NOTA CHE QUI PUOI MISURARE ANCHE TVOC
-/*
-    if (gas.eco2 > maxGas || gas.eco2 < minGas){
-        console.log('WARNING, CO2 sensor: ' + gas.eco2);
-        client.publish('co2', gas.eco2.toString(), function(error) {
-            if (error) {
-                console.error('Error publishing co2 value:', error);
-            }
-        });
-    } else{
-        console.log('CO2 sensor: ' + gas.eco2);
-    }
-*/
+
 }
 function onColorData(color) {
     //console.log('Color sensor: r ' + color.red + ' g ' + color.green + ' b ' + color.blue + ' c ' + color.clear );
@@ -173,9 +150,10 @@ function onColorData(color) {
 function onDiscover(thingy) {
     console.log('Discovered: ' + thingy);
 
-    thingy.on('disconnect', function() {
-        console.log('Disconnected!');
-        process.exit(1)
+    thingy.on('disconnect', function() { // Se il thingy si disconnette
+        console.log('Thingy disconnected!');
+        socket.disconnect(); // Disconnettiti dal web socket
+        process.exit(1); //esci, questo processo child muore
     });
 
     thingy.connectAndSetUp(function(error) {
@@ -234,5 +212,18 @@ function onDiscover(thingy) {
 }
 
 
-console.log('Looking for Thingy device...');
-Thingy.discover(onDiscover);
+
+const socketIOClient = require('socket.io-client');
+const socket = socketIOClient('http://127.0.0.1:6000');
+
+socket.on('connect', () => { // Dopo che ci si collega al server Web Socket, si cerca il dispositivo thingy
+    console.log('Connected to Web Socket server...');
+    console.log('Looking for Thingy device...');
+    Thingy.discover(onDiscover);
+});
+
+
+// quando ci si disconette dal websocket
+socket.on('disconnect', () => {
+    console.log('Disconnected from web socket.');
+});
