@@ -238,7 +238,7 @@ function onDiscover(thingy) {
 
 
 const socketIOClient = require('socket.io-client');
-const socket = socketIOClient('http://127.0.0.1:6000');
+const socket = socketIOClient('http://127.0.0.1:3001');
 
 console.log("Waiting for Web Socket connection...")
 

@@ -1,5 +1,5 @@
 const socketIOClient = require('socket.io-client');
-const socket = socketIOClient('http://127.0.0.1:6000');
+const socket = socketIOClient('http://127.0.0.1:3001');
 
 // Questo è un prorotipo di client iscritto ai topic allo scopo di testare i messaggi web socket
 // Questo codice verrà sostituito da quello nell'app dello smartphone che viene notificato quando ci sono valori anomali

@@ -1,12 +1,16 @@
 const express = require('express');
 const app = express();
 const httpServer = require('http').createServer(app);
-const io = require('socket.io')(httpServer);
+var socketIo = require("socket.io")(httpServer, {
+    cors: {
+        origin: '*',
+    }
+});
 
 // Questo è il Web socket server
 // Quando qualcuno si connette, in base all'azione che viene svolta (subscribe, publish, disconnect), gestisce diverse operazioni
 // Si mette in ascolto sulla porta 6000
-io.on('connection', (socket) => {
+socketIo.on('connection', (socket) => {
 
     const clientIpAddress = socket.request.connection.remoteAddress;
     const clientPort = socket.request.connection.remotePort;
@@ -19,7 +23,7 @@ io.on('connection', (socket) => {
 
     socket.on('publish', (data) => {
         console.log(`Received message on topic ${data.topic}: ${data.message}`);
-        io.to(data.topic).emit('message', { topic: data.topic, message: data.message });
+        socketIo.to(data.topic).emit('message', { topic: data.topic, message: data.message });
 
     });
 
@@ -28,6 +32,6 @@ io.on('connection', (socket) => {
     });
 });
 
-httpServer.listen(6000, () => {
-    console.log('Server started on port 6000.');
+httpServer.listen(3001, () => {
+    console.log('Server started on port 3001.');
 });
