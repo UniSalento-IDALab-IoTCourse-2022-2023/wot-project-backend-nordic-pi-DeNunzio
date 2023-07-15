@@ -1,9 +1,15 @@
 const express = require('express');
 const app = express();
 const { spawn } = require('child_process');
+const cors = require('cors');
+
+app.use(cors());
+app.use(cors({
+    origin: '*' // Sostituisci con l'origine desiderata
+}));
 
 // Definisco dei parametri standard
-app.locals.minCO2 = 250;
+app.locals.minCO2 = 300;
 app.locals.maxCO2 = 500;
 app.locals.minTemp = 10;
 app.locals.maxTemp = 40;
@@ -56,7 +62,7 @@ app.post('/set_params', (req, res) => {
     console.log('Does it have to be horizontal? ' + app.locals.hasToBeHorizontal)
     console.log("\n");
 
-    res.sendStatus(200);
+    res.status(200).json({ message: 'New parameters set...' });
 });
 
 

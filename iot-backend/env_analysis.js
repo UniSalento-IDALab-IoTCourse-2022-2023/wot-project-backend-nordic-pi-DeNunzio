@@ -101,7 +101,7 @@ function checkEnv() {
 
         if (hasToBeDark === 1 && tempClear > light_threshold){
             console.log("WARNING: Too much light " + tempClear )
-            socket.emit('publish', { topic: 'light', message: tempClear.toString() }); // Invia tramite Web Socket il valore anomalo
+            socket.emit('publish', { topic: 'light', message: "1" }); // Invia tramite Web Socket il valore anomalo
             /*
             client.publish('light', tempClear.toString(), function(error) { // Invia tramite MQTT il valore anomalo
                 if (error) {
@@ -111,7 +111,7 @@ function checkEnv() {
             */
         } else if (hasToBeDark === 0 && tempClear < light_threshold){
             console.log("WARNING: Too much dark " + tempClear)
-            socket.emit('publish', { topic: 'light', message: tempClear.toString() }); // Invia tramite Web Socket il valore anomalo
+            socket.emit('publish', { topic: 'light', message: "0" }); // Invia tramite Web Socket il valore anomalo
             /*
             client.publish('light', tempClear.toString(), function(error) { // Invia tramite MQTT il valore anomalo
                 if (error) {

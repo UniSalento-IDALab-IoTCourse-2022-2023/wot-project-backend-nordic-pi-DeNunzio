@@ -12,6 +12,9 @@ socket.on('connect', () => {
   socket.emit('subscribe', 'humidity');
   socket.emit('subscribe', 'co2');
   socket.emit('subscribe', 'horizontal');
+  socket.emit('subscribe', 'light');
+
+
 
 });
 
