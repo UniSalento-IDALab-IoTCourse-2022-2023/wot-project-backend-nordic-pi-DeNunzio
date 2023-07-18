@@ -20,3 +20,5 @@ GESTIRE VERSIONI DI NODE JS
 https://heynode.com/tutorial/install-nodejs-locally-nvm/
 https://allurcode.com/install-any-version-of-nodejs-and-npm-on-raspberry-pi/
 
+INSTALLARE DOCKER SU RASPBERRY
+https://indomus.it/guide/come-installare-docker-su-raspberry-pi-con-raspbian/#sudoers

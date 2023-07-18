@@ -1,0 +1,24 @@
+version: '3'
+services:
+  nodejs8:
+    image: node:8.9.0
+    privileged: true
+    container_name: node_server
+    ports:
+      - 3000:3000
+    volumes:
+      - ./:/app/
+    working_dir: /app
+    command: npm install > /dev/null
+    entrypoint: node app.js
+
+  nodejs10:
+    image: node:10.2.0
+    container_name: websocket_server
+    ports:
+      - 3001:3001
+    volumes:
+      - ./:/app/
+    working_dir: /app
+    command: npm install > /dev/null
+    entrypoint: node ws_server.js
