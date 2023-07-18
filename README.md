@@ -5,11 +5,19 @@ Il cuore del prototipo è composto dalle misurazioni dei valori ambientali trami
 Questa applicazione Node.js utilizza il framework express, e presenta degli endpoint con lo scopo di selezionare i parametri ambientali che dovrebbero essere rispettati dalla Box, avviare l’analisi dell’ambiente, e terminarla.
 Sul Raspberry gira anche il server WebSocket, che agisce come punto centrale nella comunicazione tra i client, in quanto ha il compito di ricevere i messaggi e inoltrarli ai vari utenti. Esso gestisce la connessione persistente, consentendo una comunicazione bidirezionale in tempo reale.
 Il Raspberry permette prima di tutto di selezionare i range entro cui la Box contenenti i cibi pronti dovrebbe rimanere. Quando inizia la corsa, il Raspberry preleva le misure dell’ambiente effettuate dal Thingy:52 tramite BLE, e si occupa della loro analisi. Il thingy misura temperatura, pressione, umidità, co2, a cui si aggiunge la possibilità di controllare che la box rimanga orizzontale, o che abbia particolari condizioni di luce. Se il Raspberry nota dei valori anomali rispetto ai range prefissati, allora pubblica questa informazione via WebSocket sul topic corrispondente, dove l’applicazione mobile attende questi dati.
-In questa repository sono presenti entrambi i codici per il server express (App.js) con il relativo script di analisi per l'ambiente (env_analysis.js), e il server WebSocket (ws_server.js)
+In questa repository sono presenti entrambi i codici per il server express (App.js) con il relativo script di analisi per l'ambiente (env_analysis.js), e il server WebSocket (ws_server.js) .
+Per avviare il tutto, lanciare i comandi:
+sudo node app.js
+node ws_server.js
+
+NOTA BENE: Il codice app.js richiede la versione di node 8.9.0, mentre ws_server.js richiede versione >= 10.2.0
+Conviene quindi utilizzare un gestore di versioni come nvm. 
+
 Gli endpoint principali sono i seguenti:
+
 ● POST a /set_params
 Inviando una richiesta POST con un json come segue, è possibile selezionare i range che l’utente vorrebbe che la box rispettasse. Se verranno misurati valori al di fuori di questi intervalli, saranno considerati anomalie. Da notare che in caso non si specifichi un range, verranno utilizzati degli intervalli standard prestabiliti.
-{
+{ 
   "minCO2": 400, 
   "maxCO2": 1000, 
   "minTemp": 20, 
@@ -18,14 +26,16 @@ Inviando una richiesta POST con un json come segue, è possibile selezionare i r
   "maxPress": 1100, 
   "minHum": 40, 
   "maxHum": 80, 
-  "hasToBeDark": 0, 
+  "hasToBeDark": 0,   
   "hasToBeHorizontal": 0
-}
+}    
+
 
 ● GET a /start_analysis
 Questo endpoint avvia un processo child che fa girare uno script Node.js che si occupa dell’analisi dell’ambiente prelevando i valori dal Thingy:52 tramite le sue bluetooth api. Il processo parent comunica al child le informazioni sui range che dovrebbero essere rispettati tramite argomento.
 Lo script utilizza la libreria thingy analizzata precedentemente, e associa le funzioni di callback relative a ogni aggiornamento dei valori ambientali a cui si è interessati, così da poterli analizzare.
-Quando questo script nota dei valori anomali, fuori dal range preimpostato, invia un messaggio via WebSocket sul topic relativo all’anomalia specifica (temperatura, umidità, ... ).
+Quando questo script nota dei valori anomali, fuori dal range preimpostato, invia un messaggio via WebSocket sul topic relativo all’anomalia specifica (temperatura, umidità, ... ).  
+
 ● GET a /stop_analysis conclude l’analisi dell’ambiente, terminando il processo child.
 
 
@@ -55,6 +65,3 @@ Questa architettura permette una comunicazione efficiente tra i diversi componen
 - [WOT - Back End Raspberry (Nordic)](https://github.com/UniSalento-IDALab-IoTCourse-2022-2023/wot-project-backend-nordic-pi-DeNunzio)
   
 
-
-
-Per avviare il progetto andare nella cartella di root e scrivere nel terminale: `ng serve`. Il server è visibile su `http://localhost:4200/`.
